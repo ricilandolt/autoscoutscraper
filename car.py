@@ -27,4 +27,4 @@ baseurl = 'https://www.autoscout24.ch'
 start_url = baseurl + '/de/s'
 dbconnection = ""
 autoscoutscraper =  scraper(driver , wd, start_url, baseurl, dbconnection, params['page'] ,params['vehtype'])
-autoscoutscraper.setup()
+autoscoutscraper.startscraper()
