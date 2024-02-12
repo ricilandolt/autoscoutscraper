@@ -9,7 +9,7 @@ class scraper :
         self.baseurl = baseurl
         self.dbconnection = dbconnection
         self.page = page
-        self.vehtype
+        self.vehtype = vehtype
 
     def setup(self):
         self.driver.set_window_size(1024, 600)

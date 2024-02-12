@@ -11,4 +11,5 @@ sudo python3 -m venv /home/ec2-user/alphabetapp/virt
 source ./virt/bin/activate 
 sudo chown -R ec2-user:ec2-user /home/ec2-user/alphabetapp/virt
 pip install -r requirements.txt
+docker stop $(docker ps -a -q)
 python car.py
