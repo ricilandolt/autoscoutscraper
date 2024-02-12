@@ -10,7 +10,7 @@ wd = os.path.dirname(os.path.realpath(__file__))
 parentdir = os.path.dirname(wd)
 sys.path.insert(0, parentdir) 
 
-PROXY_HOST = '147.53.127.97'  
+PROXY_HOST = '179.61.190.66'  
 PROXY_PORT = 4444 
 PROXY_USER = '9443f36c1f' 
 PROXY_PASS = '3fBL1eFx' 

@@ -68,13 +68,13 @@ class seleniumdriver:
                 'port': 8087,
                 'auto_config': False,  
                 'proxy': {
-                    'http': 'http://9443f36c1f:3fBL1eFx@147.53.127.97:4444',
-                    'https': 'http://9443f36c1f:3fBL1eFx@147.53.127.97:4444'
+                    'http': 'http://{}:{}@{}:{}'.format(PROXY_USER,PROXY_PASS,PROXY_HOST,PROXY_PORT),
+                    'http': 'http://{}:{}@{}:{}'.format(PROXY_USER,PROXY_PASS,PROXY_HOST,PROXY_PORT)
                 }
             }
 
             chrome_options = webdriver.ChromeOptions()
-            chrome_options.add_argument('--proxy-server=http://147.53.127.97:4444')
+            chrome_options.add_argument('--proxy-server=http://{}:{}'.format(PROXY_HOST,PROXY_PORT))
             chrome_options.add_argument('--ignore-certificate-errors')
             pluginfile = 'proxy_auth_plugin.zip'
 

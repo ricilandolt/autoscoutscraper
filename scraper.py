@@ -24,7 +24,6 @@ class scraper :
         print(pagebutton)
         pagebutton = self.driver.find_elements(By.XPATH, "//button[contains(@aria-label, 'next page')]/preceding-sibling::*[1]")
         print(pagebutton)
-        print(self.driver.page_source)
         r = self.driver.page_source
         f=open("autoscout.txt","w")
         f.write(r)
