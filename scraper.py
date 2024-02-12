@@ -20,7 +20,7 @@ class scraper :
         cookie = self.driver.find_elements(By.CSS_SELECTOR, '#onetrust-accept-btn-handler')
         if(cookie):
             cookie[0].click()
-        time.sleep(1)
+        time.sleep(30)
         pagebutton = self.driver.find_elements(By.CSS_SELECTOR, 'button.css-1e48l4x')
         pagebutton = self.driver.find_elements(By.XPATH, "//button[contains(@aria-label, 'next page')]/preceding-sibling::*[1]")
         pages = int(pagebutton[-1].text)
