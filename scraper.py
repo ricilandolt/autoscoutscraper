@@ -119,6 +119,7 @@ class scraper :
 
     
     def write_to_db(self):
+        print("datadict",self.datadict)
         decoded_str = json.dumps(self.datadict,ensure_ascii=False)
         decoded_str = decoded_str.replace("'", "")
         chunks, chunk_size = len(decoded_str), len(decoded_str)//15
