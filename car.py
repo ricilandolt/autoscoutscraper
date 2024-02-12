@@ -10,7 +10,7 @@ PROXY_PASS = '3fBL1eFx'
 driver = seleniumdriver(PROXY_HOST,PROXY_PORT,PROXY_USER,PROXY_PASS)
 
 time.sleep(5)
-driver.get("https://www.autoscout24.ch/de/autos/alle-marken?page=1&vehtyp=10")
+driver.driver.get("https://www.autoscout24.ch/de/autos/alle-marken?page=1&vehtyp=10")
 
 print(driver.title)
 
