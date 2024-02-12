@@ -22,7 +22,14 @@ class scraper :
             cookie[0].click()
         time.sleep(30)
         pagebutton = self.driver.find_elements(By.CSS_SELECTOR, 'button.css-1e48l4x')
+        print(pagebutton)
         pagebutton = self.driver.find_elements(By.XPATH, "//button[contains(@aria-label, 'next page')]/preceding-sibling::*[1]")
+        print(pagebutton)
+        print(self.driver.page_source)
+        r = self.driver.page_source
+        f=open("autoscout.txt","w")
+        f.write(r)
+        f.close()
         pages = int(pagebutton[-1].text)
 
         print(pages)
