@@ -48,9 +48,9 @@ class scraper :
             tracking = {'startpage': i}
             log = {'startpage': i, 'timestamp':datetime.now().strftime("%Y-%m-%d %H:%M:%S"), 'pages':pages}
         
-            with open(os.path.join(wd,'tracking.txt'), 'w') as f:
+            with open(os.path.join(self.wd,'tracking.txt'), 'w') as f:
                 f.write(json.dumps(tracking))
-            with open(os.path.join(wd,'log.txt'), 'w') as f:
+            with open(os.path.join(self.wd,'log.txt'), 'w') as f:
                 f.write(json.dumps(log))
             try : 
                 self.driver.get(self.start_url + '?sort[0][type]=FIRST_REGISTRATION_DATE&sort[0][order]=ASC&pagination[page]={page}'.format(page = i))
