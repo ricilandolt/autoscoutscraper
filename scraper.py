@@ -3,6 +3,7 @@ from selenium.webdriver.common.by import By
 from datetime import date, datetime
 import json
 import os 
+import pymongo
 
 class scraper :
     def __init__(self, driver, wd, start_url, baseurl, dbconnection,page,vehtypefilter ):
@@ -13,11 +14,19 @@ class scraper :
         self.dbconnection = dbconnection
         self.page = page
         self.vehtypefilter = vehtypefilter
+        currentweek = date.today().isocalendar()
+        self.extractdate = datetime.strptime(str(currentweek[0]) + '-' + str(currentweek[1]) + '-1', "%Y-%W-%w").date().strftime("%Y-%m-%d")
+        CNX_STR = os.environ['CNX_STR']
+        DB_NAME =  os.environ['DB_NAME']
+        COLL_NAME = os.environ['COLL_NAME']
+
+        client = pymongo.MongoClient(CNX_STR)
+        db = client[DB_NAME]
+        self.carsdb = db[COLL_NAME]
 
 
     def startscraper(self):
-        currentweek = date.today().isocalendar()
-        self.extractdate = datetime.strptime(str(currentweek[0]) + '-' + str(currentweek[1]) + '-1', "%Y-%W-%w").date().strftime("%Y-%m-%d")
+
     
         self.driver.set_window_size(1024, 600)
         self.driver.maximize_window()
@@ -119,14 +128,16 @@ class scraper :
 
     
     def write_to_db(self):
-        print("datadict",self.datadict)
-        decoded_str = json.dumps(self.datadict,ensure_ascii=False)
-        decoded_str = decoded_str.replace("'", "")
-        chunks, chunk_size = len(decoded_str), len(decoded_str)//15
-        chunkstring = [ decoded_str[i:i+chunk_size] for i in range(0, chunks, chunk_size) ]
-        sqlstring = """Insert /*+ ignore_row_on_dupkey_index(TMP_AUTOSCOUT, TMP_AUTOSCOUT_PK) */  into TMP_AUTOSCOUT 
-        VALUES(%s,%s,"""%(self.vehid,self.vehtype ) +("TO_CLOB ('{}')|| "*len(chunkstring))[:-3].format(*chunkstring) + """,TO_DATE('%s','YY-MM-DD'));""" %( self.extractdate) 
+        # print("datadict",self.datadict)
+        # decoded_str = json.dumps(self.datadict,ensure_ascii=False)
+        # decoded_str = decoded_str.replace("'", "")
+        # chunks, chunk_size = len(decoded_str), len(decoded_str)//15
+        # chunkstring = [ decoded_str[i:i+chunk_size] for i in range(0, chunks, chunk_size) ]
+        # sqlstring = """Insert /*+ ignore_row_on_dupkey_index(TMP_AUTOSCOUT, TMP_AUTOSCOUT_PK) */  into TMP_AUTOSCOUT 
+        # VALUES(%s,%s,"""%(self.vehid,self.vehtype ) +("TO_CLOB ('{}')|| "*len(chunkstring))[:-3].format(*chunkstring) + """,TO_DATE('%s','YY-MM-DD'));""" %( self.extractdate) 
+        cars_json = {"VEH_TYPE":self.vehtype , "VEH_ID" : self.vehid,"EXTRACT_DATE":self.extractdate , "VEH_DATA":self.datadict}
         #cursor.execute(sqlstring)
+        self.carsdb.insert_one(cars_json)
 
     def write_to_log_file(self):
         pass
