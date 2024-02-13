@@ -46,7 +46,7 @@ class scraper :
         pages = int(pagebutton[-1].text)
 
         print("pages", pages)
-        self.get_main_pages(1000,pages)
+        self.get_main_pages(2000,pages)
     
     def get_main_pages(self, startpage, pages):
         count_mainpages = 0
