@@ -136,6 +136,7 @@ class scraper :
         # sqlstring = """Insert /*+ ignore_row_on_dupkey_index(TMP_AUTOSCOUT, TMP_AUTOSCOUT_PK) */  into TMP_AUTOSCOUT 
         # VALUES(%s,%s,"""%(self.vehid,self.vehtype ) +("TO_CLOB ('{}')|| "*len(chunkstring))[:-3].format(*chunkstring) + """,TO_DATE('%s','YY-MM-DD'));""" %( self.extractdate) 
         cars_json = {"VEH_TYPE":self.vehtype , "VEH_ID" : self.vehid,"EXTRACT_DATE":self.extractdate , "VEH_DATA":self.datadict}
+        print(cars_json)
         #cursor.execute(sqlstring)
         self.carsdb.insert_one(cars_json)
 
