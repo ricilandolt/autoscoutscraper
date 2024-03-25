@@ -11,7 +11,7 @@ wd = os.path.dirname(os.path.realpath(__file__))
 parentdir = os.path.dirname(wd)
 sys.path.insert(0, parentdir) 
 
-PROXY_HOST = '191.101.125.8'  
+PROXY_HOST = '191.101.67.218'  
 PROXY_PORT = 4444 
 PROXY_USER = '9443f36c1f' 
 PROXY_PASS = '3fBL1eFx' 
@@ -19,11 +19,11 @@ PROXY_PASS = '3fBL1eFx'
 driver = seleniumdriver(PROXY_HOST,PROXY_PORT,PROXY_USER,PROXY_PASS).driver
 
 time.sleep(5)
-driver.get("https://www.autoscout24.ch/de/autos/alle-marken?page=1&vehtyp=10")
+driver.get("https://www.autoscout24.ch/de/s/vc-utility?page=1&vehtyp=20")
 
 print(driver.title)
 
-params = {'page': 1, 'vehtype': 10}
+params = {'page': 1, 'vehtype': 20}
 baseurl = 'https://www.autoscout24.ch'
 start_url = baseurl + '/de/s'
 

@@ -17,4 +17,5 @@ sudo chown -R ec2-user:ec2-user /home/ec2-user/autoscoutscraper/virt
 pip install -r /home/ec2-user/autoscoutscraper/requirements.txt
 docker stop $(docker ps -a -q)
 docker run  -d -p 4444:4444 -v /dev/shm:/dev/shm selenium/standalone-chrome
-python car.py
+cd /home/ec2-user/autoscoutscraper/
+python /home/ec2-user/autoscoutscraper/car.py

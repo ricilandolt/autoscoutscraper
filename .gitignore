@@ -1,1 +1,5 @@
 startupprod.sh
+.venv
+.env
+__pycache__
+.vscode
