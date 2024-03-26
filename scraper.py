@@ -32,7 +32,8 @@ class scraper :
         pages = int(pagebutton[-1].text)
 
         print("pages", pages)
-        self.get_main_pages(1,pages)
+        logdata = self.logdb.find_one({'vehtype':self.vehtypefilter })
+        self.get_main_pages(logdata['startpage'],pages)
     
     def get_main_pages(self, startpage, pages):
         count_mainpages = 0
@@ -109,7 +110,9 @@ class scraper :
         self.carsdb.insert_one(cars_json)
 
     def write_to_log_file(self, log):
-        self.logdb.insert_one(log)
+        vehtypequery = { "vehtype": self.vehtypefilter }
+        newlogvalues = { "$set": log }
+        self.logdb.update_one(vehtypequery, newlogvalues)
 
 
 

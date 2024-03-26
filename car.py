@@ -1,4 +1,3 @@
-
 from seleniumdriver import seleniumdriver
 from scraper import scraper
 import time 

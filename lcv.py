@@ -25,7 +25,7 @@ print(driver.title)
 
 params = {'page': 1, 'vehtype': 20}
 baseurl = 'https://www.autoscout24.ch'
-start_url = baseurl + '/de/s'
+start_url = baseurl + '/de/s/vc-utility'
 
 CNX_STR = os.environ['CNX_STR']
 DB_NAME =  os.environ['DB_NAME']
