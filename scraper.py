@@ -4,9 +4,8 @@ from datetime import date, datetime
 import json
 
 class scraper :
-    def __init__(self, driver, wd, start_url, baseurl, page,vehtypefilter, carsdb, logdb ):
+    def __init__(self, driver, start_url, baseurl, page,vehtypefilter, carsdb, logdb ):
         self.driver = driver
-        self.wd = wd
         self.start_url = start_url
         self.baseurl = baseurl
         self.page = page

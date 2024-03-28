@@ -14,13 +14,13 @@ PROXY_PASS = '3fBL1eFx'
 driver = seleniumdriver(PROXY_HOST,PROXY_PORT,PROXY_USER,PROXY_PASS).driver
 
 time.sleep(5)
-driver.get("https://www.autoscout24.ch/de/s/vc-utility?page=1&vehtyp=20")
+driver.get("https://www.motoscout24.ch/de/s/vc-camper?page=1&vehtyp=20")
 
 print(driver.title)
 
-params = {'page': 1, 'vehtype': 20}
-baseurl = 'https://www.autoscout24.ch'
-start_url = baseurl + '/de/s/vc-utility'
+params = {'page': 1, 'vehtype': 60}
+baseurl = 'https://www.motoscout24.ch'
+start_url = baseurl + '/de/s'
 
 CNX_STR = os.environ['CNX_STR']
 DB_NAME =  os.environ['DB_NAME']
