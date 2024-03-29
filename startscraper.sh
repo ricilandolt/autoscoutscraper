@@ -6,7 +6,7 @@ export COLL_NAME_LOG="autoscoutlog"
 
 service docker start
 while true; do
-    python /home/ec2-user/autoscoutscraper/carvan.py
+    python /home/ec2-user/autoscoutscraper/caravan.py
     if [ $? -ne 0 ]; then
         echo "Python-Skript abgebrochen, führe Docker-Befehle aus..."
         docker stop $(docker ps -a -q)
