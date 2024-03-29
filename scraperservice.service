@@ -1,0 +1,10 @@
+[Unit]
+Description=My Scraper startup Script
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/home/ec2-user/autoscoutscraper/startscraper.sh
+
+[Install]
+WantedBy=multi-user.target
