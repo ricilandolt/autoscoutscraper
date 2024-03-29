@@ -23,9 +23,9 @@ baseurl = 'https://www.motoscout24.ch'
 start_url = baseurl + '/de/s'
 
 CNX_STR = os.environ['CNX_STR']
-DB_NAME =  os.environ['DB_NAME']
-COLL_NAME = os.environ['COLL_NAME']
-COLL_NAME_LOG = os.environ['COLL_NAME_LOG']
+DB_NAME =  'carmarket'
+COLL_NAME = 'autoscout'
+COLL_NAME_LOG = 'autoscoutlog'
 
 client = pymongo.MongoClient(CNX_STR)
 db = client[DB_NAME]
