@@ -1,4 +1,4 @@
-
+#!/bin/bash
 export CNX_STR="mongodb+srv://ricardo:fKPMEyujxm1HlFGh@carmarket.wk9kj.mongodb.net/carmarket?retryWrites=true&w=majority"
 export DB_NAME="carmarket"
 export COLL_NAME="autoscout"
