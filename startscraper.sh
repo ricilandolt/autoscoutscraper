@@ -5,6 +5,7 @@ export COLL_NAME="autoscout"
 export COLL_NAME_LOG="autoscoutlog"
 
 service docker start
+source /home/ec2-user/autoscoutscraper/virt/bin/activate 
 while true; do
     python /home/ec2-user/autoscoutscraper/caravan.py
     if [ $? -ne 0 ]; then
