@@ -1,4 +1,9 @@
 
+export CNX_STR="mongodb+srv://ricardo:fKPMEyujxm1HlFGh@carmarket.wk9kj.mongodb.net/carmarket?retryWrites=true&w=majority"
+export DB_NAME="carmarket"
+export COLL_NAME="autoscout"
+export COLL_NAME_LOG="autoscoutlog"
+
 service docker start
 while true; do
     python /home/ec2-user/autoscoutscraper/car.py
