@@ -1,0 +1,19 @@
+{
+    "logs": {
+      "logs_collected": {
+        "files": {
+          "collect_list": [
+            {
+              "file_path": "/var/log/scraper.log",
+              "log_group_name": "scraper_logs",
+              "log_stream_name": "{instance_id}",
+              "timezone": "Local"
+            }
+          ]
+        }
+      },
+      "log_stream_name": "scraper_stream",
+      "force_flush_interval": 15
+    }
+  }
+  
