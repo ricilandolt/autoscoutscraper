@@ -4,11 +4,10 @@ import os
 import pymongo
 import time 
 
-
-PROXY_HOST = '191.101.125.8'  
+PROXY_HOST = os.environ['PROXY_HOST']
+PROXY_USER = os.environ['PROXY_USER']
+PROXY_PASS = os.environ['PROXY_PASS']
 PROXY_PORT = 4444 
-PROXY_USER = '9443f36c1f' 
-PROXY_PASS = '3fBL1eFx' 
 
 driver = seleniumdriver(PROXY_HOST,PROXY_PORT,PROXY_USER,PROXY_PASS).driver
 
