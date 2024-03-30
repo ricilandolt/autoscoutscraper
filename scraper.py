@@ -30,7 +30,7 @@ class scraper :
 
         pagebutton = self.driver.find_elements(By.XPATH, "//button[contains(@aria-label, 'next page')]/preceding-sibling::*[1]")
         print(pagebutton)
-        if pagebutton:
+        if not pagebutton:
             with open("/var/log/scraper.log", "a") as f : 
                 f.write("ERROR Page Button is null for vehtype {}".format(self.vehtypefilter)  + " \n")
 
