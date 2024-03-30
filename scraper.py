@@ -67,6 +67,8 @@ class scraper :
 
         with open("/var/log/scraper.log", "a") as f : 
             f.write("Scraper Finished for vehtype {}".format(self.vehtypefilter)  + " \n")
+        log = {'vehtype':self.vehtypefilter ,'startpage': 1, 'extractdate':self.extractdate,'timestamp':datetime.now().strftime("%Y-%m-%d %H:%M:%S"), 'pages':pages}
+        self.write_to_log_file(log)
 
     def get_sub_pages(self,sublinks):
         count = 0
