@@ -17,6 +17,8 @@ class scraper :
 
 
     def startscraper(self):
+        with open("/var/log/scraper.log", "a") as f : 
+            f.write("Scraper Started for vehtype {}".format(self.vehtypefilter)  + " \n")
         self.driver.set_window_size(1024, 600)
         self.driver.maximize_window()
         self.driver.get(self.start_url + '?page={page}&vehtyp={vehtyp}'.format(page = self.page, vehtyp = self.vehtypefilter))
@@ -28,6 +30,10 @@ class scraper :
 
         pagebutton = self.driver.find_elements(By.XPATH, "//button[contains(@aria-label, 'next page')]/preceding-sibling::*[1]")
         print(pagebutton)
+        if pagebutton:
+            with open("/var/log/scraper.log", "a") as f : 
+                f.write("ERROR Page Button is null for vehtype {}".format(self.vehtypefilter)  + " \n")
+
         pages = int(pagebutton[-1].text)
 
         print("pages", pages)
@@ -54,10 +60,13 @@ class scraper :
             except :
                 count_mainpages += 1
                 if count_mainpages == 50:
-                    # write email and trigger new scraper instance
-                    # question better to start new python app or start new instance
+                    with open("/var/log/scraper.log", "a") as f : 
+                        f.write("ERROR Count Mainpages failed for Vehtype {}".format(self.vehtypefilter)  + " \n")
                     exit(1)
                 continue
+
+        with open("/var/log/scraper.log", "a") as f : 
+            f.write("Scraper Finished for vehtype {}".format(self.vehtypefilter)  + " \n")
 
     def get_sub_pages(self,sublinks):
         count = 0
