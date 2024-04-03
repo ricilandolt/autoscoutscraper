@@ -3,3 +3,4 @@ startupprod.sh
 .env
 __pycache__
 .vscode
+geckodriver.log
