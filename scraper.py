@@ -48,8 +48,11 @@ class scraper :
     
             log = {'vehtype':self.vehtypefilter ,'startpage': i, 'extractdate':self.extractdate,'timestamp':datetime.now().strftime("%Y-%m-%d %H:%M:%S"), 'pages':pages}
             self.write_to_log_file(log)
-            try : 
+            try :           
+                start = time.time()
                 self.driver.get(self.start_url + '?sort[0][type]=FIRST_REGISTRATION_DATE&sort[0][order]=ASC&pagination[page]={page}'.format(page = i))
+                end = time.time()
+                print("main page ",end-start)
                 time.sleep(1)
                 #find sublinks
                 articles = self.driver.find_elements(By.CSS_SELECTOR, 'article')
@@ -68,7 +71,10 @@ class scraper :
         with open("/var/log/scraper.log", "a") as f : 
             f.write("Scraper Finished for vehtype {}".format(self.vehtypefilter)  + " \n")
         log = {'vehtype':self.vehtypefilter ,'startpage': 1, 'extractdate':self.extractdate,'timestamp':datetime.now().strftime("%Y-%m-%d %H:%M:%S"), 'pages':pages}
+        start = time.time()
         self.write_to_log_file(log)
+        end = time.time()
+        print("log file ",end-start)
 
     def get_sub_pages(self,sublinks):
         count = 0
@@ -81,10 +87,16 @@ class scraper :
 
             try : 
                 print("-"*10)
+                start = time.time()
                 self.driver.get(sublink )
+                end = time.time()
+                print("subpage ", end-start)
                 time.sleep(0.2)
                 self.scrape_data()
+                start = time.time()
                 self.write_to_db()
+                end = time.time()
+                print("write to db ", end-start)
 
             except Exception as e:
                 print(e)
@@ -95,7 +107,10 @@ class scraper :
 
     def scrape_data(self):
         #read json with the main data in order to not identify all values one by one
+        start = time.time()
         self.read_json_data()
+        end = time.time()
+        print("scrape data ",end-start)
 
 
     def read_json_data(self):
@@ -116,7 +131,6 @@ class scraper :
     
     def write_to_db(self):
         cars_json = {"VEH_TYPE":self.vehtype , "vehicleTypeId" : self.vehid,"ExtractionDate":self.extractdate , "VEH_DATA":self.datadict}
-        print(cars_json)
         self.carsdb.insert_one(cars_json)
 
     def write_to_log_file(self, log):
