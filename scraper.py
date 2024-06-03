@@ -137,6 +137,7 @@ class scraper :
         cars_json = {"VEH_TYPE":self.vehtype , "vehicleTypeId" : self.vehid,"ExtractionDate":self.extractdate , "VEH_DATA":self.datadict}
         self.carsdb.insert_one(cars_json)
         self.cur.execute("""INSERT INTO autoscout VALUES({},{},to_date('{}','YYYY-MM-DD'),'{}') ON CONFLICT (VEH_TYPE,VEH_ID,EXTRACT_DATE) DO NOTHING""".format(cars_json['VEH_TYPE'], 2, cars_json['ExtractionDate'], json.dumps( cars_json['VEH_DATA']).replace('\n','').replace('\t','').replace("'","") ))
+        self.conn.commit()
 
 
     def write_to_tracking_file(self, log):
