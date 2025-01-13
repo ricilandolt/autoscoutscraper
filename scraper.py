@@ -73,7 +73,8 @@ class scraper :
                 end = time.time()
                 print("finish to db ", end-start)
 
-            except :
+            except Exception as e:
+                print("An error occurred:", e)
                 count_mainpages += 1
                 if count_mainpages == 50:
                     # self.write_to_log("ERROR Count Mainpages failed for Vehtype {}".format(self.vehtypefilter)  + " \n")
@@ -126,16 +127,19 @@ class scraper :
     def write_to_tracking_file(self, log):
         # self.logdb[ str(self.vehtypefilter) ]= log
         print("adfsd")
-        # update_query = """
-        # UPDATE logs
-        # SET startpage = {startpage},
-        #     extractdate = to_date('{extractdate}', 'YYYY-MM-DD'),
-        #     timestamp = '{timestamp}',
-        #     pages = {pages}
-        # WHERE vehtype = {vehtype};
-        # """.format(**log)
-        # print(update_query)
-        # self.cur.execute(update_query)
+        # try: 
+        #     update_query = """
+        #     UPDATE logs
+        #     SET startpage = {startpage},
+        #         extractdate = to_date('{extractdate}', 'YYYY-MM-DD'),
+        #         timestamp = '{timestamp}',
+        #         pages = {pages}
+        #     WHERE vehtype = {vehtype};
+        #     """.format(**log)
+        #     print(update_query)
+        #     self.cur.execute(update_query)
+        # except Exception as e:
+        #     print("An error occurred:", e)
         print("updated")
 
     
