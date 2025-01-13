@@ -126,35 +126,32 @@ class scraper :
 
 
     def write_to_tracking_file(self, log):
-        # self.logdb[ str(self.vehtypefilter) ]= log
-        print("adfsd")
-def write_to_tracking_file(self, log):
-    try:
-        update_query = """
-        UPDATE logs
-        SET startpage = %s,
-            extractdate = to_date(%s, 'YYYY-MM-DD'),
-            timestamp = %s,
-            pages = %s
-        WHERE vehtype = %s;
-        """
-        print("Updating logs...")
+        try:
+            update_query = """
+            UPDATE logs
+            SET startpage = %s,
+                extractdate = to_date(%s, 'YYYY-MM-DD'),
+                timestamp = %s,
+                pages = %s
+            WHERE vehtype = %s;
+            """
+            print("Updating logs...")
 
-        self.cur.execute("SET statement_timeout TO 5000;")
-        self.cur.execute(update_query, (
-            log['startpage'],
-            self.extractdate,
-            log['timestamp'],
-            log['pages'],
-            log['vehtype']
-        ))
+            self.cur.execute("SET statement_timeout TO 5000;")
+            self.cur.execute(update_query, (
+                log['startpage'],
+                self.extractdate,
+                log['timestamp'],
+                log['pages'],
+                log['vehtype']
+            ))
 
-        print("Logs updated.")
-    except Exception as e:
-        print("An error occurred:", e)
-        print("updated")
-    finally:
-        self.cur.execute("SET statement_timeout TO 0;")
+            print("Logs updated.")
+        except Exception as e:
+            print("An error occurred:", e)
+            print("updated")
+        finally:
+            self.cur.execute("SET statement_timeout TO 0;")
 
     
     def write_to_log(self,msg):
