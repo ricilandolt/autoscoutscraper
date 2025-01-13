@@ -3,8 +3,11 @@ from selenium.webdriver.common.by import By
 from datetime import date, datetime
 import json
 
+
+vehtype_recoding = {'car':10  , 'motorcycle':  60,  'utility' :20, 'camper':70 }
+
 class scraper :
-    def __init__(self, driver, start_url, baseurl, page,vehtypefilter, carsdb, logdb, conn=None ):
+    def __init__(self, driver, start_url, baseurl, page,vehtypefilter,  logdb = {"10":{"startpage":1}, "20":{"startpage":1},"60":{"startpage":1}, "70":{"startpage":1}}, conn=None ):
         self.driver = driver
         self.start_url = start_url
         self.baseurl = baseurl
@@ -12,7 +15,7 @@ class scraper :
         self.vehtypefilter = vehtypefilter
         currentweek = date.today().isocalendar()
         self.extractdate = datetime.strptime(str(currentweek[0]) + '-' + str(currentweek[1]) + '-1', "%Y-%W-%w").date().strftime("%Y-%m-%d")
-        self.carsdb = carsdb
+
         self.logdb = logdb
         if conn :
             self.conn = conn
@@ -20,7 +23,7 @@ class scraper :
 
 
     def startscraper(self):
-        self.write_to_log("Scraper Started for vehtype {}".format(self.vehtypefilter)  + " \n")
+        # self.write_to_log("Scraper Started for vehtype {}".format(self.vehtypefilter)  + " \n")
         self.driver.set_window_size(1024, 600)
         self.driver.maximize_window()
         self.driver.get(self.start_url + '?page={page}&vehtyp={vehtyp}'.format(page = self.page, vehtyp = self.vehtypefilter))
@@ -33,14 +36,18 @@ class scraper :
         pagebutton = self.driver.find_elements(By.XPATH, "//button[contains(@aria-label, 'next page')]/preceding-sibling::*[1]")
         print(pagebutton)
         if not pagebutton:
-            self.write_to_log("ERROR Page Button is null for vehtype {}".format(self.vehtypefilter)  + " \n")
+            print("ERROR Page Button is null for vehtype {}".format(self.vehtypefilter)  + " \n")
+            # self.write_to_log("ERROR Page Button is null for vehtype {}".format(self.vehtypefilter)  + " \n")
 
 
         pages = int(pagebutton[-1].text)
 
         print("pages", pages)
-        logdata = self.logdb.find_one({'vehtype':self.vehtypefilter })
-        self.get_main_pages(logdata['startpage'],pages)
+        # startpage = 1
+        self.cur.execute("select startpage from logs where vehtype = {}".format(self.vehtypefilter))
+        rs = self.cur.fetchall()
+        startpage = rs[0][0] if rs else 1 
+        self.get_main_pages(startpage,pages)
     
     def get_main_pages(self, startpage, pages):
         count_mainpages = 0
@@ -56,57 +63,30 @@ class scraper :
                 end = time.time()
                 print("main page ",end-start)
                 time.sleep(1)
-                #find sublinks
-                articles = self.driver.find_elements(By.CSS_SELECTOR, 'article')
-                sublinks = [ link.find_elements(By.CSS_SELECTOR, 'a')[0].get_attribute('href')  for link in articles]
-                print("sublinks",sublinks)
-                self.get_sub_pages(sublinks)
 
-            except :
-                count_mainpages += 1
-                if count_mainpages == 50:
-                    self.write_to_log("ERROR Count Mainpages failed for Vehtype {}".format(self.vehtypefilter)  + " \n")
-                    exit(1)
-                continue
-        
-        self.conn.close()
-        self.cur.close()
-        self.write_to_log("Scraper Finished for vehtype {}".format(self.vehtypefilter)  + " \n")
 
-        log = {'vehtype':self.vehtypefilter ,'startpage': 1, 'extractdate':self.extractdate,'timestamp':datetime.now().strftime("%Y-%m-%d %H:%M:%S"), 'pages':pages}
-        start = time.time()
-        self.write_to_tracking_file(log)
-        end = time.time()
-        print("log file ",end-start)
-
-    def get_sub_pages(self,sublinks):
-        count = 0
-        for sublink in sublinks: 
-            print("subpage:  ",count)
-            print(sublink) 
-            count +=1
-            if count > 30 :
-                break
-
-            try : 
-                print("-"*10)
-                start = time.time()
-                self.driver.get(sublink )
-                end = time.time()
-                print("subpage ", end-start)
-                time.sleep(0.2)
                 self.scrape_data()
                 start = time.time()
                 self.write_to_db()
                 end = time.time()
                 print("write to db ", end-start)
 
-            except Exception as e:
-                print(e)
-                self.datadict = None
-                self.vehid = None 
-                self.vehtype = None
+            except :
+                count_mainpages += 1
+                if count_mainpages == 50:
+                    # self.write_to_log("ERROR Count Mainpages failed for Vehtype {}".format(self.vehtypefilter)  + " \n")
+                    exit(1)
                 continue
+        
+        self.conn.close()
+        self.cur.close()
+        # self.write_to_log("Scraper Finished for vehtype {}".format(self.vehtypefilter)  + " \n")
+
+        log = {'vehtype':self.vehtypefilter ,'startpage': 1, 'extractdate':self.extractdate,'timestamp':datetime.now().strftime("%Y-%m-%d %H:%M:%S"), 'pages':pages}
+        start = time.time()
+        self.write_to_tracking_file(log)
+        end = time.time()
+        print("log file ",end-start)
 
     def scrape_data(self):
         #read json with the main data in order to not identify all values one by one
@@ -116,34 +96,44 @@ class scraper :
         print("scrape data ",end-start)
 
 
+
     def read_json_data(self):
         data = self.driver.find_elements(By.CSS_SELECTOR,"script[type='application/json']")
         jsonstring = data[0].get_attribute('innerHTML')
         jsonstring = jsonstring.replace('\n','').replace('\t','')
         datadict = json.loads(jsonstring)
-        datadict = datadict['props']['pageProps']
-        vehid = datadict['pageViewTracking']['listingId']
-        print("vehid",vehid)
-        vehtype = datadict['pageViewTracking']['listing_vehType'] 
-        print("vehtype", vehtype)
-        vehtype = 10 if vehtype == 'car' else 60  if vehtype == 'motorcycle' else    20 if   vehtype == 'utility' else 70 if vehtype == 'camper' else 0
-        self.datadict = datadict
-        self.vehid = vehid 
-        self.vehtype = vehtype
+        datadict =  datadict['props']['pageProps']['prefetchedListings']['content']
+        keys = ['images','features','financing','insurance','leasing','qualiLogoId','logoKey', 'teaser']
+        data = []
+        for el  in datadict :
+            obj = {k:v  for k,v in el.items() if k not in keys }
+            vehtype = vehtype_recoding.get(obj['vehicleCategory'])
+            obj['vehtype'] = vehtype
+            data.append(obj)
+        print(data[0])
+
+        self.datadict = data
 
 
     
     def write_to_db(self):
-        cars_json = {"VEH_TYPE":self.vehtype , "vehicleTypeId" : self.vehid,"ExtractionDate":self.extractdate , "VEH_DATA":self.datadict}
-        self.carsdb.insert_one(cars_json)
-        self.cur.execute("""INSERT INTO autoscout VALUES({},{},to_date('{}','YYYY-MM-DD'),'{}') ON CONFLICT (VEH_TYPE,VEH_ID,EXTRACT_DATE) DO NOTHING""".format(cars_json['VEH_TYPE'], cars_json['vehicleTypeId'], cars_json['ExtractionDate'], json.dumps( cars_json['VEH_DATA']).replace('\n','').replace('\t','').replace("'","") ))
-        self.conn.commit()
+        for el in self.datadict: 
+            self.cur.execute("""INSERT INTO autoscout VALUES({},{},to_date('{}','YYYY-MM-DD'),'{}') ON CONFLICT (VEH_TYPE,VEH_ID,EXTRACT_DATE) DO NOTHING""".format(el['vehtype'], el['id'],  extractdate, json.dumps( el).replace('\n','').replace('\t','').replace("'","") ))
 
 
     def write_to_tracking_file(self, log):
-        vehtypequery = { "vehtype": self.vehtypefilter }
-        newlogvalues = { "$set": log }
-        self.logdb.update_one(vehtypequery, newlogvalues)
+        # self.logdb[ str(self.vehtypefilter) ]= log
+        print("adfsd")
+        update_query = """
+        UPDATE logs
+        SET startpage = {startpage},
+            extractdate = to_date('{extractdate}', 'YYYY-MM-DD'),
+            timestamp = '{timestamp}',
+            pages = {pages}
+        WHERE vehtype = {vehtype};
+        """.format(**log)
+        self.cur.execute(update_query)
+
     
     def write_to_log(self,msg):
         with open("/var/log/scraper.log", "a") as f : 
