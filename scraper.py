@@ -24,31 +24,36 @@ class scraper :
 
     def startscraper(self):
         # self.write_to_log("Scraper Started for vehtype {}".format(self.vehtypefilter)  + " \n")
-        self.driver.set_window_size(1024, 600)
-        self.driver.maximize_window()
-        self.driver.get(self.start_url + '?page={page}&vehtyp={vehtyp}'.format(page = self.page, vehtyp = self.vehtypefilter))
-        print(self.start_url + '?page={page}&vehtyp={vehtyp}'.format(page = self.page, vehtyp = self.vehtypefilter))
-        time.sleep(1)
-        cookie = self.driver.find_elements(By.CSS_SELECTOR, '#onetrust-accept-btn-handler')
-        if(cookie):
-            cookie[0].click()
+        
+        while True:
+            try:
 
-        pagebutton = self.driver.find_elements(By.XPATH, "//button[contains(@aria-label, 'next page')]/preceding-sibling::*[1]")
-        print(pagebutton)
-        if not pagebutton:
-            print("ERROR Page Button is null for vehtype {}".format(self.vehtypefilter)  + " \n")
-            # self.write_to_log("ERROR Page Button is null for vehtype {}".format(self.vehtypefilter)  + " \n")
+                self.driver.set_window_size(1024, 600)
+                self.driver.maximize_window()
+                self.driver.get(self.start_url + '?page={page}&vehtyp={vehtyp}'.format(page = self.page, vehtyp = self.vehtypefilter))
+                print(self.start_url + '?page={page}&vehtyp={vehtyp}'.format(page = self.page, vehtyp = self.vehtypefilter))
+                time.sleep(1)
+                cookie = self.driver.find_elements(By.CSS_SELECTOR, '#onetrust-accept-btn-handler')
+                if(cookie):
+                    cookie[0].click()
 
+                pagebutton = self.driver.find_elements(By.XPATH, "//button[contains(@aria-label, 'next page')]/preceding-sibling::*[1]")
+                print(pagebutton)
+                if not pagebutton:
+                    print("ERROR Page Button is null for vehtype {}".format(self.vehtypefilter)  + " \n")
+                    # self.write_to_log("ERROR Page Button is null for vehtype {}".format(self.vehtypefilter)  + " \n")
+                pages = int(pagebutton[-1].text)
 
-        pages = int(pagebutton[-1].text)
+                print("pages", pages)
+                # startpage = 1
+                self.cur.execute("select startpage from logs where vehtype = {}".format(self.vehtypefilter))
+                rs = self.cur.fetchall()
+                print("rs", rs)
+                startpage = rs[0][0] if rs else 1 
+                self.get_main_pages(startpage,pages)
 
-        print("pages", pages)
-        # startpage = 1
-        self.cur.execute("select startpage from logs where vehtype = {}".format(self.vehtypefilter))
-        rs = self.cur.fetchall()
-        print("rs", rs)
-        startpage = rs[0][0] if rs else 1 
-        self.get_main_pages(startpage,pages)
+            except Exception as e:
+                print("An error occurred:", e)    
     
     def get_main_pages(self, startpage, pages):
         count_mainpages = 0
