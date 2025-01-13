@@ -3,7 +3,10 @@ from scraper import scraper
 import os
 import time 
 import psycopg2
+from dotenv import load_dotenv
 
+env_path = '/home/ec2-user/autoscoutscraper/.env'
+load_dotenv(dotenv_path=env_path)
 
 PROXY_HOST = "193.108.102.167" 
 PROXY_USER = "14a9741190786" 

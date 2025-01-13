@@ -126,16 +126,16 @@ class scraper :
     def write_to_tracking_file(self, log):
         # self.logdb[ str(self.vehtypefilter) ]= log
         print("adfsd")
-        update_query = """
-        UPDATE logs
-        SET startpage = {startpage},
-            extractdate = to_date('{extractdate}', 'YYYY-MM-DD'),
-            timestamp = '{timestamp}',
-            pages = {pages}
-        WHERE vehtype = {vehtype};
-        """.format(**log)
-        print(update_query)
-        self.cur.execute(update_query)
+        # update_query = """
+        # UPDATE logs
+        # SET startpage = {startpage},
+        #     extractdate = to_date('{extractdate}', 'YYYY-MM-DD'),
+        #     timestamp = '{timestamp}',
+        #     pages = {pages}
+        # WHERE vehtype = {vehtype};
+        # """.format(**log)
+        # print(update_query)
+        # self.cur.execute(update_query)
         print("updated")
 
     
