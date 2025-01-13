@@ -46,6 +46,7 @@ class scraper :
         # startpage = 1
         self.cur.execute("select startpage from logs where vehtype = {}".format(self.vehtypefilter))
         rs = self.cur.fetchall()
+        print("rs", rs)
         startpage = rs[0][0] if rs else 1 
         self.get_main_pages(startpage,pages)
     
@@ -127,20 +128,33 @@ class scraper :
     def write_to_tracking_file(self, log):
         # self.logdb[ str(self.vehtypefilter) ]= log
         print("adfsd")
-        # try: 
-        #     update_query = """
-        #     UPDATE logs
-        #     SET startpage = {startpage},
-        #         extractdate = to_date('{extractdate}', 'YYYY-MM-DD'),
-        #         timestamp = '{timestamp}',
-        #         pages = {pages}
-        #     WHERE vehtype = {vehtype};
-        #     """.format(**log)
-        #     print(update_query)
-        #     self.cur.execute(update_query)
-        # except Exception as e:
-        #     print("An error occurred:", e)
+def write_to_tracking_file(self, log):
+    try:
+        update_query = """
+        UPDATE logs
+        SET startpage = %s,
+            extractdate = to_date(%s, 'YYYY-MM-DD'),
+            timestamp = %s,
+            pages = %s
+        WHERE vehtype = %s;
+        """
+        print("Updating logs...")
+
+        self.cur.execute("SET statement_timeout TO 5000;")
+        self.cur.execute(update_query, (
+            log['startpage'],
+            self.extractdate,
+            log['timestamp'],
+            log['pages'],
+            log['vehtype']
+        ))
+
+        print("Logs updated.")
+    except Exception as e:
+        print("An error occurred:", e)
         print("updated")
+    finally:
+        self.cur.execute("SET statement_timeout TO 0;")
 
     
     def write_to_log(self,msg):
