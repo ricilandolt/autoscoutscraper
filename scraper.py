@@ -121,7 +121,7 @@ class scraper :
     
     def write_to_db(self):
         for el in self.datadict: 
-            self.cur.execute("""INSERT INTO autoscout VALUES({},{},to_date('{}','YYYY-MM-DD'),'{}') ON CONFLICT (VEH_TYPE,VEH_ID,EXTRACT_DATE) DO NOTHING""".format(el['vehtype'], el['id'],  extractdate, json.dumps( el).replace('\n','').replace('\t','').replace("'","") ))
+            self.cur.execute("""INSERT INTO autoscout VALUES({},{},to_date('{}','YYYY-MM-DD'),'{}') ON CONFLICT (VEH_TYPE,VEH_ID,EXTRACT_DATE) DO NOTHING""".format(el['vehtype'], el['id'],  self.extractdate, json.dumps( el).replace('\n','').replace('\t','').replace("'","") ))
 
 
     def write_to_tracking_file(self, log):
