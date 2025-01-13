@@ -58,18 +58,20 @@ class scraper :
             log = {'vehtype':self.vehtypefilter ,'startpage': i, 'extractdate':self.extractdate,'timestamp':datetime.now().strftime("%Y-%m-%d %H:%M:%S"), 'pages':pages}
             self.write_to_tracking_file(log)
             try :           
+                print("start extracting data")
                 start = time.time()
                 self.driver.get(self.start_url + '?sort[0][type]=FIRST_REGISTRATION_DATE&sort[0][order]=ASC&pagination[page]={page}'.format(page = i))
                 end = time.time()
                 print("main page ",end-start)
                 time.sleep(1)
 
-
+                print("start scrape")
                 self.scrape_data()
                 start = time.time()
+                print("write to db")
                 self.write_to_db()
                 end = time.time()
-                print("write to db ", end-start)
+                print("finish to db ", end-start)
 
             except :
                 count_mainpages += 1
@@ -132,7 +134,9 @@ class scraper :
             pages = {pages}
         WHERE vehtype = {vehtype};
         """.format(**log)
+        print(update_query)
         self.cur.execute(update_query)
+        print("updated")
 
     
     def write_to_log(self,msg):

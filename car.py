@@ -25,6 +25,7 @@ start_url = baseurl + '/de/s'
 POSTGRES_STR = os.getenv("POSTGRES_STR")
 if POSTGRES_STR:
     conn = psycopg2.connect(POSTGRES_STR)
+    conn.autocommit = True
 else :
     conn = ""
 
