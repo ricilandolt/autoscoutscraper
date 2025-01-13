@@ -3,7 +3,7 @@
 service docker start
 source /home/ec2-user/autoscoutscraper/virt/bin/activate 
 while true; do
-    python /home/ec2-user/autoscoutscraper/$scriptname
+    python /home/ec2-user/autoscoutscraper/$1
     if [ $? -ne 0 ]; then
         echo "Python-Skript abgebrochen, führe Docker-Befehle aus..."
         docker stop $(docker ps -a -q)
