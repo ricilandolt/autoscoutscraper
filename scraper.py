@@ -88,8 +88,7 @@ class scraper :
                     exit(1)
                 continue
         
-        self.conn.close()
-        self.cur.close()
+
         # self.write_to_log("Scraper Finished for vehtype {}".format(self.vehtypefilter)  + " \n")
 
         log = {'vehtype':self.vehtypefilter ,'startpage': 1, 'extractdate':self.extractdate,'timestamp':datetime.now().strftime("%Y-%m-%d %H:%M:%S"), 'pages':pages}
@@ -97,6 +96,8 @@ class scraper :
         self.write_to_tracking_file(log)
         end = time.time()
         print("log file ",end-start)
+        self.conn.close()
+        self.cur.close()
 
     def scrape_data(self):
         #read json with the main data in order to not identify all values one by one
