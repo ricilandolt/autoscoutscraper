@@ -26,7 +26,7 @@ if not debug :
 time.sleep(5)
 
 params = {'page': 1, 'vehtype': os.getenv("VEH_TYPE", 10)}
-baseurl = 'https://www.autoscout24.ch'
+baseurl = os.getenv("BASEURL", 'https://www.autoscout24.ch')
 start_url = baseurl +  os.getenv("URL_SUFFIX", '/de/s')
 
 
