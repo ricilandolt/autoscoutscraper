@@ -96,8 +96,6 @@ class scraper :
         self.write_to_tracking_file(log)
         end = time.time()
         print("log file ",end-start)
-        self.conn.close()
-        self.cur.close()
 
     def scrape_data(self):
         #read json with the main data in order to not identify all values one by one
