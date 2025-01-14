@@ -1,29 +1,27 @@
 #!/bin/bash
-sudo yum install -y git
-sudo yum install -y docker 
-sudo yum install -y amazon-cloudwatch-agent
+sudo yum update -y
+sudo yum install -y git docker
 sudo systemctl start docker
-sudo chmod 666 /var/run/docker.sock
-sudo touch /var/log/scraper.log
-sudo chown -R ec2-user:ec2-user /var/log/scraper.log
-
-git clone <repo> /home/ec2-user/autoscoutscraper
-sudo python3 -m venv /home/ec2-user/autoscoutscraper/virt
-source /home/ec2-user/autoscoutscraper/virt/bin/activate 
-sudo chown -R ec2-user:ec2-user /home/ec2-user/autoscoutscraper/virt
-pip install -r /home/ec2-user/autoscoutscraper/requirements.txt
+sudo systemctl enable docker
+sudo usermod -aG docker ec2-user
+git clone https://ricilandolt:@github.com/ricilandolt/autoscoutscraper /home/ec2-user/autoscoutscraper
+sudo chown -R ec2-user:ec2-user /home/ec2-user/autoscoutscraper
+sudo chmod -R 755 /home/ec2-user/autoscoutscraper
+sudo chown ec2-user:ec2-user /home/ec2-user/autoscoutscraper/proxy_auth_plugin.zip
+sudo chmod 644 /home/ec2-user/autoscoutscraper/proxy_auth_plugin.zip
+echo "clone done"
+PROXY_PASS=""
+POSTGRES_STR=""
+URL_SUFFIX="/de/s"
+VEH_TYPE=10
+echo "PROXY_PASS=$PROXY_PASS" > /home/ec2-user/autoscoutscraper/.env
+echo "POSTGRES_STR=$POSTGRES_STR" >> /home/ec2-user/autoscoutscraper/.env
+echo "URL_SUFFIX=$URL_SUFFIX" > /home/ec2-user/autoscoutscraper/.env
+echo "VEH_TYPE=$VEH_TYPE" >> /home/ec2-user/autoscoutscraper/.env
+chown ec2-user:ec2-user /home/ec2-user/autoscoutscraper/.env
 sudo chmod +x /home/ec2-user/autoscoutscraper/startscraper.sh
-sudo cp /home/ec2-user/autoscoutscraper/scraperservice.service /etc/systemd/system/scraperservice.service
-SCRIPTNAME="car.py"
-SERVICE_FILE="/etc/systemd/system/scraperservice.service"
-PROXY_PASS="" 
-CNX_STR=""
-
-sed -i "/\[Service\]/a Environment=\"scriptname=$SCRIPTNAME\"" $SERVICE_FILE
-sed -i "/\[Service\]/a Environment=\"CNX_STR=$CNX_STR\"" $SERVICE_FILE
-sed -i "/\[Service\]/a Environment=\"PROXY_PASS=$PROXY_PASS\"" $SERVICE_FILE
-sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c file://home/ec2-user/autoscoutscraper/cloudwatchconf.json -s
-
-systemctl daemon-reload
-systemctl enable scraperservice.service
-systemctl start scraperservice.service
+sudo python3 -m venv /home/ec2-user/autoscoutscraper/virt
+source /home/ec2-user/autoscoutscraper/virt/bin/activate
+pip install -r /home/ec2-user/autoscoutscraper/requirements.txt
+echo "pip install done"
+su - ec2-user -c "/bin/bash /home/ec2-user/autoscoutscraper/startscraper.sh scrapy.py"

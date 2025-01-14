@@ -28,17 +28,12 @@ params = {'page': 1, 'vehtype': 20}
 baseurl = 'https://www.autoscout24.ch'
 start_url = baseurl + '/de/s/vc-utility'
 
-CNX_STR = os.environ['CNX_STR']
-DB_NAME =  'carmarket'
-COLL_NAME = 'autoscout'
-COLL_NAME_LOG = 'autoscoutlog'
-POSTGRES_STR = os.environ['POSTGRES_STR']
+POSTGRES_STR = os.getenv("POSTGRES_STR")
 if POSTGRES_STR:
     conn = psycopg2.connect(POSTGRES_STR)
-
-client = pymongo.MongoClient(CNX_STR)
-db = client[DB_NAME]
-carsdb = db[COLL_NAME]
-logdb = db[COLL_NAME_LOG]
+    conn.autocommit = True
+else :
+    conn = ""
+    
 autoscoutscraper =  scraper(driver , start_url, baseurl,  params['page'] ,params['vehtype'], carsdb, logdb,conn)
 autoscoutscraper.startscraper()
