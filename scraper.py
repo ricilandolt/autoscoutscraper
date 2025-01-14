@@ -6,7 +6,7 @@ import copy
 
 
 vehtype_recoding = {'car':10  , 'motorcycle':  60,  'utility' :20, 'camper':70 }
-
+fallback = {"10":8000, "60":1500,"70":300 , "20":700}
 class scraper :
     def __init__(self, driver, start_url, baseurl, page,vehtypefilter,  logdb = {"10":{"startpage":1}, "20":{"startpage":1},"60":{"startpage":1}, "70":{"startpage":1}}, conn=None ):
         self.driver = driver
@@ -37,14 +37,22 @@ class scraper :
                 cookie = self.driver.find_elements(By.CSS_SELECTOR, '#onetrust-accept-btn-handler')
                 if(cookie):
                     cookie[0].click()
+                time.sleep(0.3)
 
                 pagebutton = self.driver.find_elements(By.XPATH, "//button[contains(@aria-label, 'next page')]/preceding-sibling::*[1]")
+                try: 
+                    pageamount = round(int(self.driver.find_elements(By.XPATH, "//h1/preceding-sibling::*[1]")[0].text.replace("'","")) /20)
+                except:
+                    pageamount = 0
                 print(pagebutton)
-                if not pagebutton:
-                    print("ERROR Page Button is null for vehtype {}".format(self.vehtypefilter)  + " \n")
+                if  pagebutton:
+                    pages = int(pagebutton[-1].text)
                     # self.write_to_log("ERROR Page Button is null for vehtype {}".format(self.vehtypefilter)  + " \n")
-                pages = int(pagebutton[-1].text)
-
+                elif pageamount:
+                    pages = pageamount
+                else : 
+                    pages = fallback[str( self.vehtypefilter)]
+               
                 print("pages", pages)
                 # startpage = 1
                 self.cur.execute("select startpage from logs where vehtype = {}".format(self.vehtypefilter))

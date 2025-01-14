@@ -4,3 +4,4 @@ startupprod.sh
 __pycache__
 .vscode
 geckodriver.log
+ec2-userdata
