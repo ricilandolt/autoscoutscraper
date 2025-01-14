@@ -2,6 +2,7 @@ import time
 from selenium.webdriver.common.by import By
 from datetime import date, datetime
 import json
+import copy
 
 
 vehtype_recoding = {'car':10  , 'motorcycle':  60,  'utility' :20, 'camper':70 }
@@ -107,6 +108,8 @@ class scraper :
 
 
     def read_json_data(self):
+        templatekeys = ["bodyColor", "listPrice", "bodyType", "cubicCapacity", "doors", "driveType" ]
+        templatedata = { k:None for k in templatekeys }
         data = self.driver.find_elements(By.CSS_SELECTOR,"script[type='application/json']")
         jsonstring = data[0].get_attribute('innerHTML')
         jsonstring = jsonstring.replace('\n','').replace('\t','')
@@ -115,12 +118,18 @@ class scraper :
         keys = ['images','features','financing','insurance','leasing','qualiLogoId','logoKey', 'teaser']
         data = []
         for el  in datadict :
+            templatedict = {}
+            cardict = copy.deepcopy(templatedata)
             obj = {k:v  for k,v in el.items() if k not in keys }
             vehtype = vehtype_recoding.get(obj['vehicleCategory'])
-            obj['vehtype'] = vehtype
-            data.append(obj)
+            vehicledata = {k:v  for k,v in el.items() if k != 'seller' }
+            cardict.update(vehicledata)
+            templatedict['listing'] = cardict 
+            templatedict['vehtype'] = vehtype
+            templatedict['seller'] = obj['seller']
+            templatedict['id'] = obj['id']
+            data.append(templatedict)
         print(data[0])
-
         self.datadict = data
 
 
