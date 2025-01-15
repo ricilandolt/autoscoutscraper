@@ -25,8 +25,8 @@ class scraper :
 
     def startscraper(self):
         # self.write_to_log("Scraper Started for vehtype {}".format(self.vehtypefilter)  + " \n")
-        
-        while True:
+        run = 0 
+        while (self.vehtypefilter == 10) | (self.vehtypefilter != 10   & run == 0 ) :
             try:
 
                 self.driver.set_window_size(1024, 600)
@@ -47,7 +47,6 @@ class scraper :
                 print(pagebutton)
                 if  pagebutton:
                     pages = int(pagebutton[-1].text)
-                    # self.write_to_log("ERROR Page Button is null for vehtype {}".format(self.vehtypefilter)  + " \n")
                 elif pageamount:
                     pages = pageamount
                 else : 
@@ -63,6 +62,8 @@ class scraper :
 
             except Exception as e:
                 print("An error occurred:", e)    
+                
+            run += 1
     
     def get_main_pages(self, startpage, pages):
         count_mainpages = 0
