@@ -24,4 +24,5 @@ sudo python3 -m venv /home/ec2-user/autoscoutscraper/virt
 source /home/ec2-user/autoscoutscraper/virt/bin/activate
 pip install -r /home/ec2-user/autoscoutscraper/requirements.txt
 echo "pip install done"
+cd /home/ec2-user/autoscoutscraper
 su - ec2-user -c "/bin/bash /home/ec2-user/autoscoutscraper/startscraper.sh scrapy.py"

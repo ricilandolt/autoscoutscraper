@@ -76,7 +76,7 @@ class seleniumdriver:
             chrome_options = webdriver.ChromeOptions()
             chrome_options.add_argument('--proxy-server=http://{}:{}'.format(PROXY_HOST,PROXY_PORT))
             chrome_options.add_argument('--ignore-certificate-errors')
-            pluginfile = 'proxy_auth_plugin.zip'
+            pluginfile = '/home/ec2-user/autoscoutscraper/proxy_auth_plugin.zip'
 
             with zipfile.ZipFile(pluginfile, 'w') as zp:
                     zp.writestr("manifest.json", manifest_json)
